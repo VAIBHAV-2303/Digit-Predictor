@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		Result
+	</title>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="jumbotron">
+			<h1>Results</h1>
+			<p>You wrote {{ result }}</p>
+		</div>	
+	</div>
+	<button type="button" class="btn btn-primary" onclick="Correct()">
+		Correct
+	</button>
+	<button type="button" class="btn btn-primary" onclick="Incorrect()">
+		Incorrect
+	</button>
+	<script type="text/javascript">
+		function Correct(){
+			$.post("/update", JSON.stringify(1), function(){});
+			setTimeout(redirect, 2000);
+		}
+		function Incorrect(){
+			$.post("/update", JSON.stringify(0), function(){});
+			setTimeout(redirect, 2000);
+		}
+
+		function redirect(){
+			window.location='/';
+		}
+
+	</script>
+</body>
+</html>

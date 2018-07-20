@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PPS</title>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+	<div class="page-header">
+		<h1>
+			Paya
+			<small>
+				Prediction System
+			</small>
+		</h1>
+	</div>
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col">
+					Canvas
+				</th>
+				<th scope="col">
+					For Better results
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<canvas width="560px" height="560px" style="border:3px solid #000000;" id="myCanvas"></canvas>
+				</td>
+				<td>
+					<ul class="list-group">
+						<li class="list-group-item">
+							Write in the centre		
+						</li>
+						<li class="list-group-item">
+							Cover the entire canvas
+						</li>
+					</ul>
+					<button type="button" class="btn btn-primary" onclick="Predict()">
+						Predict!
+					</button>
+					<button type="button" class="btn btn-primary" onclick="clearCnv()">
+						Clear
+					</button>
+				</br>
+				<h3>
+					Line width:
+				</h3>
+				<div id="linews">
+					<input type="radio" id="r1" name="linew" value="10"> 16
+					<input type="radio" id="r2" name="linew" value="18"> 48
+					<input type="radio" id="r3" name="linew" value="32" checked="checked">56   
+				</div>
+				Accuracy = {{ acc }}
+			</td>
+		</tr>
+	</tbody>
+</table>
+<script type="text/javascript">
+	var cnv=document.getElementById('myCanvas');
+	var ctx=cnv.getContext('2d');
+	ctx.lineJoin = "round";
+	ctx.strokeStyle = "black";
+	var lastx, lasty, pressed=false;
+
+	$('#myCanvas').mousedown( function(ev){
+		pressed=true;
+		draw(ev.pageX - $(this).offset().left, ev.pageY - $(this).offset().top, false);
+	} );
+
+	$('#myCanvas').mouseup( function(ev){
+		pressed=false;
+	} );
+
+	$('#myCanvas').mousemove( function(ev){
+		if(pressed){
+			draw(ev.pageX - $(this).offset().left, ev.pageY - $(this).offset().top, true);
+		}
+	} );
+
+	$('#myCanvas').mouseleave( function(ev){
+		pressed = false;
+	} );
+
+	function draw(x, y, isdown){
+		if(isdown){
+			ctx.lineWidth = document.querySelector('input[name="linew"]:checked').value;
+			ctx.beginPath();
+			ctx.moveTo(lastx, lasty);
+			ctx.lineTo(x, y);
+			ctx.closePath();
+			ctx.stroke(); 
+		}
+		lastx=x, lasty=y;
+	}
+
+	function clearCnv(){
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.clearRect(0, 0, cnv.width, cnv.height);
+	}
+
+	function Predict(){
+		var DataURL=cnv.toDataURL();
+		$.ajax({
+			type: "POST",
+			url: "/recieve",
+			data:{
+				imageBase64: DataURL
+			}
+		}).done(function() {
+			console.log('imageDatasent');
+		});
+
+		setTimeout(redirect, 2000);
+	}
+
+	function redirect(){
+		window.location='/result';
+	}
+
+</script>
+</body>
+</html>
