@@ -34,7 +34,7 @@ class Net(nn.Module):
 # Need to open the pickled list object into read mode
  
 model_pickle_path = 'model.pkl'
-model_unpickle = open(model_pickle_path, 'r')
+model_unpickle = open(model_pickle_path, 'rb')
  
 # load the unpickle object into a variable
 clf = pickle.load(model_unpickle)
@@ -45,7 +45,7 @@ lastresult = 5
 
 @app.route('/')
 def main():
-	with open('det', 'r') as f:
+	with open('Stats', 'r') as f:
 		string = f.readlines()[0]
 		tot, cor = string.split()	
 	tot = float(tot)
@@ -87,11 +87,11 @@ def recieve():
 @app.route('/update', methods = ['POST', 'GET'])
 def update():
 	data = request.get_json(force = True)
-	with open('det', 'r') as f:
+	with open('Stats', 'r') as f:
 		string = f.readlines()[0]
 		tot, cor = string.split()	
 	
-	with open('det', 'w') as f:	
+	with open('Stats', 'w') as f:	
 		if data == 1:
 			f.writelines([str(int(tot)+1), " ", str(int(cor)+1)])
 		else:

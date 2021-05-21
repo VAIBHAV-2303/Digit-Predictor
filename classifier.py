@@ -12,12 +12,12 @@ import pickle
 batch_size = 64
 
 # MNIST Dataset
-train_dataset = datasets.MNIST(root='./mnist_data/',
+train_dataset = datasets.MNIST(root='.',
                                train=True,
                                transform=transforms.ToTensor(),
                                download=True)
 
-test_dataset = datasets.MNIST(root='./mnist_data/',
+test_dataset = datasets.MNIST(root='.',
                               train=False,
                               transform=transforms.ToTensor())
 
@@ -68,7 +68,7 @@ def train(epoch):
         if batch_idx % 10 == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
-                100. * batch_idx / len(train_loader), loss.data[0]))
+                100. * batch_idx / len(train_loader), loss.item()))
 
 for epoch in range(1, 10):
     train(epoch)
